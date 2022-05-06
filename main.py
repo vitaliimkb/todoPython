@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from datetime import datetime
 from tkcalendar import Calendar
+import calendar
 # --------------------Imports-------------------------
 
 
@@ -27,8 +28,8 @@ l2 = Label(screen, text="Enter task title", font=("Arial", 20))
 task_entry = Entry(screen, width=18, font=("Arial", 20))
 task_box = Listbox(screen, height=12, width=50, selectmode="SINGLE", bd=4, font=("Arial", 15))
 b1 = Button(screen, text="Add task", width=20, font=("Arial", 17), command=lambda: add_task())
-b2 = Button(screen, text="Delete", width=15, font=("Arial", 15))
-b3 = Button(screen, text="Delete All", width=15, font=("Arial", 15))
+b2 = Button(screen, text="Delete", width=15, font=("Arial", 15), command=lambda: del_one())
+b3 = Button(screen, text="Delete All", width=15, font=("Arial", 15), command=lambda: del_all())
 b4 = Button(screen, text="Done", width=15, font=("Arial", 15))
 cal = Calendar(screen, selectmode="day",
                year=current_datetime.year,
@@ -65,12 +66,47 @@ def add_task():
         item = Task(word, deadline, False)
         task_list.append(item)
         task_entry.delete(0, "end")
+        list_update()
 
+
+def del_one(): # bug
+    try:
+        text = task_box.get(task_box.curselection())
+        title = text.split(" | ")[0]
+        for el in task_list:
+            if el.title == title:
+                task_list.remove(el)
+                list_update()
+    except:
+        messagebox.showwarning("Cannot delete", "Not task item selected")
+
+
+def del_all():
+    mb = messagebox.askyesno("Delete all", "Are you sure?")
+    if mb:
+        task_list.clear()
+        list_update()
+
+
+def date_transform(day, month, year):
+    return f"{day} {calendar.month_name[month]}, {year}"
+
+
+def list_update():
+    clear_list()
     for i in task_list:
-        print(i.title)
-        print(i.deadline)
-        print(i.status)
-        print()
+        date = i.deadline
+        name = i.title
+        st = i.status
+        row = f"{name} | {date_transform(date.day, date.month, date.year)} | {st}"
+        task_box.insert('end', row)
+
+
+def clear_list():
+    cal.calevent_remove()
+    for task in task_list:
+        task.get_color_day(current_datetime, cal)
+    task_box.delete(0, 'end')
 # --------------------Functions-----------------------
 
 
