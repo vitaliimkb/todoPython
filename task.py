@@ -17,8 +17,10 @@ class Task:
         less_than_cm = month < current_datetime.month
         less_than_cy = year < current_datetime.year
         less_or_equals_cd = day <= current_datetime.day
+### year greater current month less day
 
-        if ((less_than_cy and diff_year) or (less_than_cm and less_than_cy) or (equals_month and less_or_equals_cd)) and \
+        if ((less_than_cy and diff_year) or (less_than_cm and less_than_cy) or
+            (equals_month and less_or_equals_cd)) and \
                 self.status is False:
             cal.calevent_create(self.deadline, self.title, "code_red")
             cal.tag_config("code_red", background="red", foreground="white")
