@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 
 
 class Task:
@@ -12,8 +12,9 @@ class Task:
         month = self.deadline.month
         year = self.deadline.year
 
-        date1 = datetime.date(year, month, day)
-        date2 = datetime.date(current_datetime.year, current_datetime.month, current_datetime.day)
+        date1 = date(year, month, day)
+        date2 = date(current_datetime.year, current_datetime.month, current_datetime.day)
+
         if date2 > date1 and self.status is False:
             cal.calevent_create(self.deadline, self.title, "code_red")
             cal.tag_config("code_red", background="red", foreground="white")
